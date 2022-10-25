@@ -1,0 +1,116 @@
+syntax = "proto3";
+option java_package = "com.grpc.education";
+option java_multiple_files = true;
+package education;
+
+message EmptyRequest{
+}
+
+message BasicRequest {
+  string message = 1;
+}
+
+message BasicResponse {
+  string message = 1;
+  string statusCode = 2;
+  string statusMessage = 3;
+}
+
+message GetAllStudentsDataResponse {
+  message Student {
+    string studentId = 1;
+    string lastName = 2;
+    string firstName = 3;
+    string major = 4;
+    repeated string completedCoursesList = 5;
+  }
+  repeated Student students = 2;
+}
+
+message AddStudentRequest {
+  string studentId = 1;
+  string lastName = 2;
+  string firstName = 3;
+  string major = 4;
+  string completedCoursesList = 5;
+}
+
+message AddCourseRequest{
+  string courseId = 1;
+  string professorName = 2;
+  string courseName = 3;
+  string courseCredit = 4;
+  string prerequisiteList = 5;
+}
+
+message DeleteStudentRequest {
+  string studentId = 1;
+}
+
+message DeleteCourseRequest {
+  string courseId = 1;
+}
+
+message StudentResponse {
+  string studentId = 1;
+  string lastName = 2;
+  string firstName = 3;
+  string major = 4;
+  string completedCoursesList = 5;
+}
+
+message CourseResponse {
+  string courseId = 1;
+  string professorName = 2;
+  string courseName = 3;
+  string prerequisiteList = 4;
+}
+
+message GetAllCoursesDataResponse {
+  message Course {
+    string courseId = 1;
+    string professorName = 2;
+    string courseName = 3;
+    string courseCredit=4;
+    string prerequisiteList = 5;
+  }
+  repeated Course courses = 2;
+}
+
+message EnrolmentRequest{
+  string studentId = 1;
+  string courseId = 2;
+}
+
+message StatusCode{
+  string StatusCode = 1;
+  string message = 2;
+}
+
+message StudentLoginRequest{
+  string studentId = 1;
+  string password = 2;
+}
+
+service EducationService {
+  rpc getAllStudentsData(BasicRequest) returns (GetAllStudentsDataResponse) {}
+  rpc getAllCoursesData(BasicRequest) returns (GetAllCoursesDataResponse) {}
+
+  rpc addStudent(AddStudentRequest) returns (BasicResponse){}
+  rpc addCourse(AddCourseRequest) returns (BasicResponse){}
+
+  rpc deleteStudent(DeleteStudentRequest) returns (BasicResponse){}
+  rpc deleteCourse(DeleteCourseRequest) returns (BasicResponse){}
+
+  rpc updateStudent(AddStudentRequest) returns (BasicResponse){}
+  rpc updateCourse(AddCourseRequest) returns (BasicResponse){}
+
+  rpc getStudent(BasicRequest) returns (StudentResponse){}
+  rpc getCourse(BasicRequest) returns (CourseResponse){}
+
+  rpc enrolment(EnrolmentRequest) returns (BasicResponse){}
+
+  rpc basicRead(BasicRequest) returns (BasicResponse){}
+
+  rpc login(StudentLoginRequest) returns (StudentResponse){}
+}
