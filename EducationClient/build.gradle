@@ -1,0 +1,76 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.5'
+    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+    id 'com.google.protobuf' version '0.8.18'
+    id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    maven { // The google mirror is less flaky than mavenCentral()
+        url "https://maven-central.storage-download.googleapis.com/maven2/"
+    }
+
+    mavenCentral()
+    mavenLocal()
+}
+
+def grpcVersion = '1.44.1' // CURRENT_GRPC_VERSION
+def protobufVersion = '3.19.2'
+def protocVersion = protobufVersion
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.4'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools:2.7.4'
+    runtimeOnly 'com.h2database:h2:2.1.214'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.4'
+//    implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+
+
+    //GRPC
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+//    implementation "org.apache.tomcat:annotations-api:6.0.53"
+
+    // examples/advanced need this for JsonFormat
+    implementation "com.google.protobuf:protobuf-java-util:${protobufVersion}"
+
+    runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+
+    testImplementation "io.grpc:grpc-testing:${grpcVersion}"
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+protobuf {
+    protoc { artifact = "com.google.protobuf:protoc:${protocVersion}" }
+    plugins {
+        grpc { artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}" }
+    }
+    generateProtoTasks {
+        all()*.plugins { grpc {} }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += [
+                    'grpc-common/build/generated/source/proto/main/grpc',
+                    'grpc-common/build/generated/source/proto/main/java'
+            ]
+        }
+    }
+}
