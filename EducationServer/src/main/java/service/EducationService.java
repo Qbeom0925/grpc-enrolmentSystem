@@ -3,6 +3,7 @@ package service;
 
 import com.grpc.education.*;
 import exception.excute.NoStudentNumException;
+import global.log.MyLogger;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 
@@ -11,12 +12,13 @@ import java.util.logging.Logger;
 
 public class EducationService extends EducationServiceGrpc.EducationServiceImplBase{
 
-    private final static Logger LOG = Logger.getGlobal();
+//    private final static Logger LOG = Logger.getGlobal();
+    private MyLogger Logger;
     private ManagedChannel channel;
 
     public EducationService(ManagedChannel channel) {
         this.channel = channel;
-        LOG.setLevel(Level.INFO);
+        Logger = MyLogger.getLogger();
     }
 
     @Override
@@ -73,13 +75,17 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
     public void deleteStudent(DeleteStudentRequest request, StreamObserver<BasicResponse> responseObserver) {
         BasicResponse response = EducationServiceGrpc.newBlockingStub(channel).deleteStudent(DeleteStudentRequest.newBuilder().setStudentId(request.getStudentId()).build());
         try {
-            if (!response.getMessage().equals("SUCCESS")) throw new NoStudentNumException();
+            if (response.getMessage().equals("SUCCESS")){
+                Logger.log("SUCCESS",MyLogger.getClassName(),MyLogger.getMethodName());
+                response(responseObserver,"200","요청에 성공하였습니다.");
+            }else{
+                throw new NoStudentNumException();
+            }
         } catch (NoStudentNumException e) {
-                LOG.warning("NOT_FOUND_STUDENT");
+                Logger.warning("NOT_FOUND_STUDENT",MyLogger.getClassName(),MyLogger.getMethodName());
                 response(responseObserver,"404","student");
                 e.printStackTrace();
         }
-        response(responseObserver,"200","요청에 성공하였습니다.");
     }
 
     @Override

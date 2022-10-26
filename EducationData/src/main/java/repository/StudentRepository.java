@@ -89,12 +89,14 @@ public class StudentRepository {
 
     public void addStudent(String studentId, String firstName, String lastName, String major) {
         try {
-            String sql = "insert into student(student_id, first_name,  last_name, major) VALUES (?,?,?,?)";
+            String sql = "insert into student(student_id, first_name,  last_name, major,completed_courses,password) VALUES (?,?,?,?,?,?)";
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, studentId);
             st.setString(2, firstName);
             st.setString(3, lastName);
             st.setString(4, major);
+            st.setString(5,"0");
+            st.setString(6,studentId);
             st.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
