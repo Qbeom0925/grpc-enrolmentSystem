@@ -8,12 +8,12 @@ public class SqlConnection{
 
     public static Connection connection(){
         try {
-            Class.forName("org.h2.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = null;
             connection = DriverManager.getConnection(
-                    "jdbc:h2:tcp://localhost/~/clsv",
-                    "sa",
-                    "");
+                    "jdbc:mysql://mehdb.cengwcl4wnom.ap-northeast-2.rds.amazonaws.com:3306/education?",
+                    "admin",
+                    "mehmeh123");
             return connection;
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
