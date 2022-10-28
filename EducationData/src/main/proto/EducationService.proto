@@ -12,6 +12,8 @@ message BasicRequest {
 
 message BasicResponse {
   string message = 1;
+  string statusCode = 2;
+  string statusMessage = 3;
 }
 
 message GetAllStudentsDataResponse {
@@ -55,6 +57,7 @@ message StudentResponse {
   string firstName = 3;
   string major = 4;
   string completedCoursesList = 5;
+  string status = 6;
 }
 
 message CourseResponse {

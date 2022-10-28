@@ -17,6 +17,8 @@ private static final long serialVersionUID = 0L;
   }
   private BasicResponse() {
     message_ = "";
+    statusCode_ = "";
+    statusMessage_ = "";
   }
 
   @java.lang.Override
@@ -53,6 +55,18 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             message_ = s;
+            break;
+          }
+          case 18: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            statusCode_ = s;
+            break;
+          }
+          case 26: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            statusMessage_ = s;
             break;
           }
           default: {
@@ -125,6 +139,82 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int STATUSCODE_FIELD_NUMBER = 2;
+  private volatile java.lang.Object statusCode_;
+  /**
+   * <code>string statusCode = 2;</code>
+   * @return The statusCode.
+   */
+  @java.lang.Override
+  public java.lang.String getStatusCode() {
+    java.lang.Object ref = statusCode_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      statusCode_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string statusCode = 2;</code>
+   * @return The bytes for statusCode.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getStatusCodeBytes() {
+    java.lang.Object ref = statusCode_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      statusCode_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int STATUSMESSAGE_FIELD_NUMBER = 3;
+  private volatile java.lang.Object statusMessage_;
+  /**
+   * <code>string statusMessage = 3;</code>
+   * @return The statusMessage.
+   */
+  @java.lang.Override
+  public java.lang.String getStatusMessage() {
+    java.lang.Object ref = statusMessage_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      statusMessage_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string statusMessage = 3;</code>
+   * @return The bytes for statusMessage.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getStatusMessageBytes() {
+    java.lang.Object ref = statusMessage_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      statusMessage_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -142,6 +232,12 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, message_);
     }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(statusCode_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, statusCode_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(statusMessage_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, statusMessage_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -153,6 +249,12 @@ private static final long serialVersionUID = 0L;
     size = 0;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, message_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(statusCode_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, statusCode_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(statusMessage_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, statusMessage_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -171,6 +273,10 @@ private static final long serialVersionUID = 0L;
 
     if (!getMessage()
         .equals(other.getMessage())) return false;
+    if (!getStatusCode()
+        .equals(other.getStatusCode())) return false;
+    if (!getStatusMessage()
+        .equals(other.getStatusMessage())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -184,6 +290,10 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
     hash = (53 * hash) + getMessage().hashCode();
+    hash = (37 * hash) + STATUSCODE_FIELD_NUMBER;
+    hash = (53 * hash) + getStatusCode().hashCode();
+    hash = (37 * hash) + STATUSMESSAGE_FIELD_NUMBER;
+    hash = (53 * hash) + getStatusMessage().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -319,6 +429,10 @@ private static final long serialVersionUID = 0L;
       super.clear();
       message_ = "";
 
+      statusCode_ = "";
+
+      statusMessage_ = "";
+
       return this;
     }
 
@@ -346,6 +460,8 @@ private static final long serialVersionUID = 0L;
     public com.grpc.education.BasicResponse buildPartial() {
       com.grpc.education.BasicResponse result = new com.grpc.education.BasicResponse(this);
       result.message_ = message_;
+      result.statusCode_ = statusCode_;
+      result.statusMessage_ = statusMessage_;
       onBuilt();
       return result;
     }
@@ -396,6 +512,14 @@ private static final long serialVersionUID = 0L;
       if (other == com.grpc.education.BasicResponse.getDefaultInstance()) return this;
       if (!other.getMessage().isEmpty()) {
         message_ = other.message_;
+        onChanged();
+      }
+      if (!other.getStatusCode().isEmpty()) {
+        statusCode_ = other.statusCode_;
+        onChanged();
+      }
+      if (!other.getStatusMessage().isEmpty()) {
+        statusMessage_ = other.statusMessage_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -499,6 +623,158 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       message_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object statusCode_ = "";
+    /**
+     * <code>string statusCode = 2;</code>
+     * @return The statusCode.
+     */
+    public java.lang.String getStatusCode() {
+      java.lang.Object ref = statusCode_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        statusCode_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string statusCode = 2;</code>
+     * @return The bytes for statusCode.
+     */
+    public com.google.protobuf.ByteString
+        getStatusCodeBytes() {
+      java.lang.Object ref = statusCode_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        statusCode_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string statusCode = 2;</code>
+     * @param value The statusCode to set.
+     * @return This builder for chaining.
+     */
+    public Builder setStatusCode(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      statusCode_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string statusCode = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearStatusCode() {
+      
+      statusCode_ = getDefaultInstance().getStatusCode();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string statusCode = 2;</code>
+     * @param value The bytes for statusCode to set.
+     * @return This builder for chaining.
+     */
+    public Builder setStatusCodeBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      statusCode_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object statusMessage_ = "";
+    /**
+     * <code>string statusMessage = 3;</code>
+     * @return The statusMessage.
+     */
+    public java.lang.String getStatusMessage() {
+      java.lang.Object ref = statusMessage_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        statusMessage_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string statusMessage = 3;</code>
+     * @return The bytes for statusMessage.
+     */
+    public com.google.protobuf.ByteString
+        getStatusMessageBytes() {
+      java.lang.Object ref = statusMessage_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        statusMessage_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string statusMessage = 3;</code>
+     * @param value The statusMessage to set.
+     * @return This builder for chaining.
+     */
+    public Builder setStatusMessage(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      statusMessage_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string statusMessage = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearStatusMessage() {
+      
+      statusMessage_ = getDefaultInstance().getStatusMessage();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string statusMessage = 3;</code>
+     * @param value The bytes for statusMessage to set.
+     * @return This builder for chaining.
+     */
+    public Builder setStatusMessageBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      statusMessage_ = value;
       onChanged();
       return this;
     }

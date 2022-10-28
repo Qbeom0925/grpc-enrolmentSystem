@@ -2,6 +2,7 @@ package service;
 
 
 import com.grpc.education.*;
+import exception.excute.FailedLoginException;
 import exception.excute.NoStudentNumException;
 import global.log.MyLogger;
 import io.grpc.ManagedChannel;
@@ -127,8 +128,17 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
 
     @Override
     public void login(StudentLoginRequest request, StreamObserver<StudentResponse> responseObserver) {
-        StudentResponse response = EducationServiceGrpc.newBlockingStub(channel).login(StudentLoginRequest.newBuilder().setStudentId(request.getStudentId()).setPassword(request.getPassword()).build());
+        StudentResponse response=null;
+            response = EducationServiceGrpc.newBlockingStub(channel).login(StudentLoginRequest.newBuilder().setStudentId(request.getStudentId()).setPassword(request.getPassword()).build());
+            try {
+                if(response.getStatus().equals("FAILED")) throw new FailedLoginException();
+            }catch (FailedLoginException e){
+                Logger.warning("FAILED_LOGIN",MyLogger.getClassName(),MyLogger.getMethodName());
+                e.printStackTrace();
+            }
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
+
+
 }

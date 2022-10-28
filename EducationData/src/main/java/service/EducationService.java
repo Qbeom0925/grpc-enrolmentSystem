@@ -6,6 +6,7 @@ import entity.Course;
 import entity.Student;
 import io.grpc.stub.StreamObserver;
 import repository.CourseRepository;
+import repository.ManagerRepository;
 import repository.StudentRepository;
 
 import java.util.List;
@@ -14,10 +15,12 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
 
     private CourseRepository courseRepository;
     private StudentRepository studentRepository;
+    private ManagerRepository managerRepository;
 
     public EducationService() {
         this.courseRepository = new CourseRepository();
         this.studentRepository = new StudentRepository();
+        this.managerRepository = new ManagerRepository();
     }
 
 
@@ -139,9 +142,22 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
     @Override
     public void login(StudentLoginRequest request, StreamObserver<StudentResponse> responseObserver) {
         StudentResponse.Builder builder = StudentResponse.newBuilder();
-        Student student =null;
-        student = studentRepository.login(request.getStudentId(), request.getPassword());
-        responseObserver.onNext(builder.setStudentId(student.getStudentId()).setMajor(student.getMajor()).setLastName(student.getLastName()).setFirstName(student.getFirstName()).setCompletedCoursesList(student.getCompletedCourses()).build());
+        if(!getRole(request.getStudentId())){
+            Student student =null;
+            student = studentRepository.login(request.getStudentId(), request.getPassword());
+            if (student != null){
+                responseObserver.onNext(builder.setStudentId(student.getStudentId()).setMajor(student.getMajor()).setLastName(student.getLastName()).setFirstName(student.getFirstName()).setCompletedCoursesList(student.getCompletedCourses()).setStatus("S").build());
+            }else{
+                responseObserver.onNext(builder.setStatus("FAILED").build());
+            }
+        }else{
+            responseObserver.onNext(builder.setStatus("M").build());
+        }
         responseObserver.onCompleted();
+    }
+
+    public boolean getRole(String login_id) {
+        if (managerRepository.getManager(login_id)) return true;
+        else return false;
     }
 }

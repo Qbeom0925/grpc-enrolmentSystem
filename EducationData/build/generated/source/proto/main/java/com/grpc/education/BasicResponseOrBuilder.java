@@ -18,4 +18,28 @@ public interface BasicResponseOrBuilder extends
    */
   com.google.protobuf.ByteString
       getMessageBytes();
+
+  /**
+   * <code>string statusCode = 2;</code>
+   * @return The statusCode.
+   */
+  java.lang.String getStatusCode();
+  /**
+   * <code>string statusCode = 2;</code>
+   * @return The bytes for statusCode.
+   */
+  com.google.protobuf.ByteString
+      getStatusCodeBytes();
+
+  /**
+   * <code>string statusMessage = 3;</code>
+   * @return The statusMessage.
+   */
+  java.lang.String getStatusMessage();
+  /**
+   * <code>string statusMessage = 3;</code>
+   * @return The bytes for statusMessage.
+   */
+  com.google.protobuf.ByteString
+      getStatusMessageBytes();
 }

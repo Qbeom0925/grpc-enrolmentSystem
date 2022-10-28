@@ -16,6 +16,7 @@ public class StudentController {
     }
 
     public void initial() {
+
         if (login()){
             Exit:
             while (true) {
@@ -23,7 +24,7 @@ public class StudentController {
                     case 1: Enrolment(); break;
                     case 0: break Exit;
                 }
-            }//TODO 로그인 exception
+            }
         }else System.out.println("로그인 실패");
     }
 
@@ -31,7 +32,7 @@ public class StudentController {
         System.out.print("ID: "); String studentId = sc.next();
         System.out.print("PASSWORD: "); String password = sc.next();
         StudentResponse studentResponse = stub.login(StudentLoginRequest.newBuilder().setStudentId(studentId).setPassword(password).build());
-        if (studentResponse != null) {
+        if (studentResponse.getStudentId().equals("")) {
             System.out.println(studentResponse.getStudentId() + " " + studentResponse.getFirstName() + " 님 안녕하세요");
             return true;
         }

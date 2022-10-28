@@ -22,7 +22,7 @@ public class StudentRepository {
     public List<Student> getStudentAll() {
         ArrayList<Student> students = new ArrayList<>();
         try {
-            String sql = "select * from Student";
+            String sql = "select * from STUDENT";
             PreparedStatement st = this.connection.prepareStatement(sql);
             ResultSet rs = null;
             rs = st.executeQuery();
@@ -77,7 +77,7 @@ public class StudentRepository {
 
     public void deleteStudent(String studentId) {
         try {
-            String sql = "DELETE FROM Student WHERE student_id = ?;";
+            String sql = "DELETE FROM STUDENT WHERE student_id = ?;";
             PreparedStatement st = this.connection.prepareStatement(sql);
             st.setString(1, studentId);
             st.executeUpdate();
@@ -89,7 +89,7 @@ public class StudentRepository {
 
     public void addStudent(String studentId, String firstName, String lastName, String major) {
         try {
-            String sql = "insert into student(student_id, first_name,  last_name, major,completed_courses,password) VALUES (?,?,?,?,?,?)";
+            String sql = "insert into STUDENT(student_id, first_name,  last_name, major,completed_courses,password) VALUES (?,?,?,?,?,?)";
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, studentId);
             st.setString(2, firstName);
@@ -105,7 +105,7 @@ public class StudentRepository {
 
     public Student getStudent(String studentId) {
         try {
-            String sql = "select * from Student where student_id = ?";
+            String sql = "select * from STUDENT where student_id = ?";
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1,studentId);
             ResultSet rs =null;
@@ -163,7 +163,7 @@ public class StudentRepository {
     }
 
     public Student login(String studentId, String password) {
-        String sql = "select * from student where student_id = ? and password = ?";
+        String sql = "select * from STUDENT where student_id = ? and password = ?";
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(sql);

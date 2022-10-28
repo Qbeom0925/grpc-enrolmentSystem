@@ -120,48 +120,48 @@ public final class EducationServiceOuterClass {
       "seName\030\003 \001(\t\022\024\n\014courseCredit\030\004 \001(\t\022\030\n\020pr" +
       "erequisiteList\030\005 \001(\t\")\n\024DeleteStudentReq" +
       "uest\022\021\n\tstudentId\030\001 \001(\t\"\'\n\023DeleteCourseR" +
-      "equest\022\020\n\010courseId\030\001 \001(\t\"v\n\017StudentRespo" +
-      "nse\022\021\n\tstudentId\030\001 \001(\t\022\020\n\010lastName\030\002 \001(\t" +
-      "\022\021\n\tfirstName\030\003 \001(\t\022\r\n\005major\030\004 \001(\t\022\034\n\024co" +
-      "mpletedCoursesList\030\005 \001(\t\"g\n\016CourseRespon" +
-      "se\022\020\n\010courseId\030\001 \001(\t\022\025\n\rprofessorName\030\002 " +
-      "\001(\t\022\022\n\ncourseName\030\003 \001(\t\022\030\n\020prerequisiteL" +
-      "ist\030\004 \001(\t\"\320\001\n\031GetAllCoursesDataResponse\022" +
-      "<\n\007courses\030\002 \003(\0132+.education.GetAllCours" +
-      "esDataResponse.Course\032u\n\006Course\022\020\n\010cours" +
-      "eId\030\001 \001(\t\022\025\n\rprofessorName\030\002 \001(\t\022\022\n\ncour" +
-      "seName\030\003 \001(\t\022\024\n\014courseCredit\030\004 \001(\t\022\030\n\020pr" +
-      "erequisiteList\030\005 \001(\t\"7\n\020EnrolmentRequest" +
-      "\022\021\n\tstudentId\030\001 \001(\t\022\020\n\010courseId\030\002 \001(\t\"1\n" +
-      "\nStatusCode\022\022\n\nStatusCode\030\001 \001(\t\022\017\n\007messa" +
-      "ge\030\002 \001(\t\":\n\023StudentLoginRequest\022\021\n\tstude" +
-      "ntId\030\001 \001(\t\022\020\n\010password\030\002 \001(\t2\323\007\n\020Educati" +
-      "onService\022V\n\022getAllStudentsData\022\027.educat" +
-      "ion.BasicRequest\032%.education.GetAllStude" +
-      "ntsDataResponse\"\000\022T\n\021getAllCoursesData\022\027" +
-      ".education.BasicRequest\032$.education.GetA" +
-      "llCoursesDataResponse\"\000\022F\n\naddStudent\022\034." +
-      "education.AddStudentRequest\032\030.education." +
-      "BasicResponse\"\000\022D\n\taddCourse\022\033.education" +
-      ".AddCourseRequest\032\030.education.BasicRespo" +
-      "nse\"\000\022L\n\rdeleteStudent\022\037.education.Delet" +
-      "eStudentRequest\032\030.education.BasicRespons" +
-      "e\"\000\022J\n\014deleteCourse\022\036.education.DeleteCo" +
-      "urseRequest\032\030.education.BasicResponse\"\000\022" +
-      "I\n\rupdateStudent\022\034.education.AddStudentR" +
-      "equest\032\030.education.BasicResponse\"\000\022G\n\014up" +
-      "dateCourse\022\033.education.AddCourseRequest\032" +
-      "\030.education.BasicResponse\"\000\022C\n\ngetStuden" +
-      "t\022\027.education.BasicRequest\032\032.education.S" +
-      "tudentResponse\"\000\022A\n\tgetCourse\022\027.educatio" +
-      "n.BasicRequest\032\031.education.CourseRespons" +
-      "e\"\000\022D\n\tenrolment\022\033.education.EnrolmentRe" +
-      "quest\032\030.education.BasicResponse\"\000\022@\n\tbas" +
-      "icRead\022\027.education.BasicRequest\032\030.educat" +
-      "ion.BasicResponse\"\000\022E\n\005login\022\036.education" +
-      ".StudentLoginRequest\032\032.education.Student" +
-      "Response\"\000B\026\n\022com.grpc.educationP\001b\006prot" +
-      "o3"
+      "equest\022\020\n\010courseId\030\001 \001(\t\"\206\001\n\017StudentResp" +
+      "onse\022\021\n\tstudentId\030\001 \001(\t\022\020\n\010lastName\030\002 \001(" +
+      "\t\022\021\n\tfirstName\030\003 \001(\t\022\r\n\005major\030\004 \001(\t\022\034\n\024c" +
+      "ompletedCoursesList\030\005 \001(\t\022\016\n\006status\030\006 \001(" +
+      "\t\"g\n\016CourseResponse\022\020\n\010courseId\030\001 \001(\t\022\025\n" +
+      "\rprofessorName\030\002 \001(\t\022\022\n\ncourseName\030\003 \001(\t" +
+      "\022\030\n\020prerequisiteList\030\004 \001(\t\"\320\001\n\031GetAllCou" +
+      "rsesDataResponse\022<\n\007courses\030\002 \003(\0132+.educ" +
+      "ation.GetAllCoursesDataResponse.Course\032u" +
+      "\n\006Course\022\020\n\010courseId\030\001 \001(\t\022\025\n\rprofessorN" +
+      "ame\030\002 \001(\t\022\022\n\ncourseName\030\003 \001(\t\022\024\n\014courseC" +
+      "redit\030\004 \001(\t\022\030\n\020prerequisiteList\030\005 \001(\t\"7\n" +
+      "\020EnrolmentRequest\022\021\n\tstudentId\030\001 \001(\t\022\020\n\010" +
+      "courseId\030\002 \001(\t\"1\n\nStatusCode\022\022\n\nStatusCo" +
+      "de\030\001 \001(\t\022\017\n\007message\030\002 \001(\t\":\n\023StudentLogi" +
+      "nRequest\022\021\n\tstudentId\030\001 \001(\t\022\020\n\010password\030" +
+      "\002 \001(\t2\323\007\n\020EducationService\022V\n\022getAllStud" +
+      "entsData\022\027.education.BasicRequest\032%.educ" +
+      "ation.GetAllStudentsDataResponse\"\000\022T\n\021ge" +
+      "tAllCoursesData\022\027.education.BasicRequest" +
+      "\032$.education.GetAllCoursesDataResponse\"\000" +
+      "\022F\n\naddStudent\022\034.education.AddStudentReq" +
+      "uest\032\030.education.BasicResponse\"\000\022D\n\taddC" +
+      "ourse\022\033.education.AddCourseRequest\032\030.edu" +
+      "cation.BasicResponse\"\000\022L\n\rdeleteStudent\022" +
+      "\037.education.DeleteStudentRequest\032\030.educa" +
+      "tion.BasicResponse\"\000\022J\n\014deleteCourse\022\036.e" +
+      "ducation.DeleteCourseRequest\032\030.education" +
+      ".BasicResponse\"\000\022I\n\rupdateStudent\022\034.educ" +
+      "ation.AddStudentRequest\032\030.education.Basi" +
+      "cResponse\"\000\022G\n\014updateCourse\022\033.education." +
+      "AddCourseRequest\032\030.education.BasicRespon" +
+      "se\"\000\022C\n\ngetStudent\022\027.education.BasicRequ" +
+      "est\032\032.education.StudentResponse\"\000\022A\n\tget" +
+      "Course\022\027.education.BasicRequest\032\031.educat" +
+      "ion.CourseResponse\"\000\022D\n\tenrolment\022\033.educ" +
+      "ation.EnrolmentRequest\032\030.education.Basic" +
+      "Response\"\000\022@\n\tbasicRead\022\027.education.Basi" +
+      "cRequest\032\030.education.BasicResponse\"\000\022E\n\005" +
+      "login\022\036.education.StudentLoginRequest\032\032." +
+      "education.StudentResponse\"\000B\026\n\022com.grpc." +
+      "educationP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -226,7 +226,7 @@ public final class EducationServiceOuterClass {
     internal_static_education_StudentResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_education_StudentResponse_descriptor,
-        new java.lang.String[] { "StudentId", "LastName", "FirstName", "Major", "CompletedCoursesList", });
+        new java.lang.String[] { "StudentId", "LastName", "FirstName", "Major", "CompletedCoursesList", "Status", });
     internal_static_education_CourseResponse_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_education_CourseResponse_fieldAccessorTable = new

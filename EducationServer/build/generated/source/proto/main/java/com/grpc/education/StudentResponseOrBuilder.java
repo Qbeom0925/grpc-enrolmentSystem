@@ -66,4 +66,16 @@ public interface StudentResponseOrBuilder extends
    */
   com.google.protobuf.ByteString
       getCompletedCoursesListBytes();
+
+  /**
+   * <code>string status = 6;</code>
+   * @return The status.
+   */
+  java.lang.String getStatus();
+  /**
+   * <code>string status = 6;</code>
+   * @return The bytes for status.
+   */
+  com.google.protobuf.ByteString
+      getStatusBytes();
 }
