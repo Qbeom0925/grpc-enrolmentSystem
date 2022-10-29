@@ -143,8 +143,8 @@ public class StudentRepository {
     }
 
     public void enrolment(String studentId, String courseId) {
-        String indexQuery = "select enrolment_idx from enrolment order by enrolment_idx desc";
-        String sql = "INSERT INTO ENROLMENT(enrolment_idx, course_id, student_id) VALUES(?,?,?)";
+        String indexQuery = "select enrolment_idx from Enrolment order by enrolment_idx desc";
+        String sql = "INSERT INTO Enrolment(enrolment_idx, course_id, student_id) VALUES(?,?,?)";
         try {
 
             PreparedStatement stIndex = connection.prepareStatement(indexQuery);
@@ -163,7 +163,7 @@ public class StudentRepository {
     }
 
     public Student login(String studentId, String password) {
-        String sql = "select * from STUDENT where student_id = ? and password = ?";
+        String sql = "select * from Student where student_id = ? and password = ?";
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(sql);
@@ -186,5 +186,74 @@ public class StudentRepository {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean checkNonOverlapEnrolment(String studentId, String courseId) {
+        try {
+            String sql = "SELECT count(*) FROM Enrolment where student_id = ? and course_id = ? ";
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, studentId);
+            st.setString(2, courseId);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()) if(rs.getInt("count(*)") ==0) return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return false;
+    }
+
+    public boolean checkAlreadyCompletedCourse(String studentId, String courseId) {
+        try {
+            String sql = "SELECT completed_courses FROM Student where student_id = ? ";
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1,studentId);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()) {
+                String completed_courses = rs.getString("completed_courses");
+                for(String s : completed_courses.split(" ")) if (s.equals(courseId)) return false;
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return false;
+    }
+
+    public boolean checkPrerequisite(String studentId, String courseId) {
+        String completed_courseSql = "select completed_courses from Student where student_id = ?";
+        String prerequisiteSql = "select prerequisite from Course where course_id = ? ";
+
+        try {
+            PreparedStatement st = connection.prepareStatement(completed_courseSql);
+            st.setString(1,studentId);
+            ResultSet rs = st.executeQuery();
+
+            String[] completed_courses = new String[0];
+            if(rs.next()){
+                String cc = rs.getString("completed_courses");
+                completed_courses = cc.split(" ");
+            }
+
+            PreparedStatement preSt = connection.prepareStatement(prerequisiteSql);
+            preSt.setString(1,courseId);
+            ResultSet preRs = preSt.executeQuery();
+            String[] prerequisites = new String[0];
+            if(preRs.next()){
+                String prerequisite = preRs.getString("prerequisite");
+                prerequisites=prerequisite.split(" ");
+            }
+
+            for (String s : completed_courses){
+                for (String s2 : prerequisites){
+                    if(s.equals(s2)) return false;
+                }
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

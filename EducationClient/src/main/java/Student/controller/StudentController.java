@@ -15,36 +15,19 @@ public class StudentController {
         sc = new Scanner(System.in);
     }
 
-    public void initial() {
-
-        if (login()){
-            Exit:
-            while (true) {
-                switch (printMenu()) {
-                    case 1: Enrolment(); break;
-                    case 0: break Exit;
-                }
+    public void initial(StudentResponse studentResponse) {
+        Exit:
+        while (true) {
+            switch (printMenu()) {
+                case 1: Enrolment(studentResponse); break;
+                case 0: break Exit;
             }
-        }else System.out.println("로그인 실패");
-    }
-
-    private boolean login() {
-        System.out.print("ID: "); String studentId = sc.next();
-        System.out.print("PASSWORD: "); String password = sc.next();
-        StudentResponse studentResponse = stub.login(StudentLoginRequest.newBuilder().setStudentId(studentId).setPassword(password).build());
-        if (studentResponse.getStudentId().equals("")) {
-            System.out.println(studentResponse.getStudentId() + " " + studentResponse.getFirstName() + " 님 안녕하세요");
-            return true;
-        }
-        else {
-            System.out.println("로그인 실패");
-            return false;
         }
     }
 
     private int printMenu() {
         sc = new Scanner(System.in);
-        List<String> stringList = List.of("1. 수강 신청 진행");
+        List<String> stringList = List.of("1. 수강 신청 진행","0. 로그아웃");
 
         for (String s : stringList) {
             System.out.println(s);
@@ -52,14 +35,16 @@ public class StudentController {
         return sc.nextInt();
     }
 
-    //TODO 학번, 과목번호 존재, 중복수강, 학점 초과
-    private void Enrolment() {
+    private void Enrolment(StudentResponse studentResponse) {
         System.out.println("수강신청을 진행합니다.");
-        System.out.print("학번: "); //TODO 나중에는 빠져서 로그인 파라미터로 값받을 예정
-        String studentId = sc.next();
         System.out.println("과목 번호:");  String courseNum = sc.next();
-
-        BasicResponse enrolment = stub.enrolment(EnrolmentRequest.newBuilder().setStudentId(studentId).setCourseId(courseNum).build());
-        System.out.println(enrolment.getMessage());
+        BasicResponse enrolment = stub.enrolment(EnrolmentRequest.newBuilder().setStudentId(studentResponse.getStudentId()).setCourseId(courseNum).build());
+        switch (enrolment.getStatusMessage()){
+            case "NON_COURSE": System.out.println("해당 번호를 가진 과목은 없습니다.");break;
+            case "ALREADY_ENROLMENT":System.out.println("해당 과목을 이미 수강신청을 하였습니다.");break;
+            case "ALREADY_COURSE":System.out.println("해당 과목을 이미 수강하였습니다.");break;
+            case "NON_PREREQUISITE":System.out.println("해당 과목의 선 이수 과목을 수강하지 않았습니다.");break;
+            case "SUCCESS":System.out.println("수강신청이 완료되었습니다.");break;
+        }
     }
 }

@@ -19,15 +19,16 @@ public class ClientMain {
     private static Comment comment;
     private static Scanner sc;
 
+    private static StudentResponse studentResponse;
+
     public static void main(String[] args) {
         inital();
         System.out.println("클라이언트 구동 완료.");
-        login();
         Exit:
         while (true){
-            switch (comment.initial()){
+            switch (login()){
                 case 1:
-                    studentController.initial();
+                    studentController.initial(studentResponse);
                     break;
                 case 2:
                     managerController.initial();
@@ -38,11 +39,19 @@ public class ClientMain {
         }
     }
 
-    private static void login() {
+    private static int login() {
         System.out.print("ID: "); String studentId = sc.next();
         System.out.print("PASSWORD: "); String password = sc.next();
-        StudentResponse login = stub.login(StudentLoginRequest.newBuilder().setStudentId(studentId).setPassword(password).build());
-        System.out.println(login.getStatus());
+        studentResponse = stub.login(StudentLoginRequest.newBuilder().setStudentId(studentId).setPassword(password).build());
+        switch (studentResponse.getStatus()){
+            case "S":
+                return 1;
+            case "M":
+                return 2;
+            default:
+                System.out.println("로그인 실패");
+        }
+        return -1;
     }
 
     public static void inital(){

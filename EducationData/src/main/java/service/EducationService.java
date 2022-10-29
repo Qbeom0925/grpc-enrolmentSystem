@@ -134,8 +134,14 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
     @Override
     public void enrolment(EnrolmentRequest request, StreamObserver<BasicResponse> responseObserver) {
         BasicResponse.Builder builder = BasicResponse.newBuilder();
-        studentRepository.enrolment(request.getStudentId(), request.getCourseId());
-        responseObserver.onNext(builder.build());
+        if(courseRepository.checkOverlapCourse(request.getCourseId())){ // 과목 존재 여부
+            if(studentRepository.checkNonOverlapEnrolment(request.getStudentId(), request.getCourseId())){ //중복 여부
+                if(studentRepository.checkAlreadyCompletedCourse(request.getStudentId(), request.getCourseId())){//이미 수강한 경우
+                    if(studentRepository.checkPrerequisite(request.getStudentId(), request.getCourseId())){ //선이수 과목 수강여부
+                        studentRepository.enrolment(request.getStudentId(), request.getCourseId());
+                        responseObserver.onNext(builder.setStatusMessage("SUCCESS").build());
+                    } else responseObserver.onNext(builder.setStatusMessage("NON_PREREQUISITE").build());} else responseObserver.onNext(builder.setStatusMessage("ALREADY_COURSE").build());} else responseObserver.onNext(builder.setStatusMessage("ALREADY_ENROLMENT").build());} else responseObserver.onNext(builder.setStatusMessage("NON_COURSE").build());
+
         responseObserver.onCompleted();
     }
 

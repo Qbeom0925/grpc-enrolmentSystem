@@ -2,24 +2,19 @@ package service;
 
 
 import com.grpc.education.*;
-import exception.excute.FailedLoginException;
-import exception.excute.NoStudentNumException;
+import exception.excute.*;
 import global.log.MyLogger;
 import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class EducationService extends EducationServiceGrpc.EducationServiceImplBase{
 
-//    private final static Logger LOG = Logger.getGlobal();
-    private MyLogger Logger;
+    private MyLogger logger;
     private ManagedChannel channel;
 
     public EducationService(ManagedChannel channel) {
         this.channel = channel;
-        Logger = MyLogger.getLogger();
+        logger = MyLogger.getLogger();
     }
 
     @Override
@@ -77,13 +72,13 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
         BasicResponse response = EducationServiceGrpc.newBlockingStub(channel).deleteStudent(DeleteStudentRequest.newBuilder().setStudentId(request.getStudentId()).build());
         try {
             if (response.getMessage().equals("SUCCESS")){
-                Logger.log("SUCCESS",MyLogger.getClassName(),MyLogger.getMethodName());
+                logger.log("SUCCESS",MyLogger.getClassName(),MyLogger.getMethodName());
                 response(responseObserver,"200","요청에 성공하였습니다.");
             }else{
                 throw new NoStudentNumException();
             }
         } catch (NoStudentNumException e) {
-                Logger.warning("NOT_FOUND_STUDENT",MyLogger.getClassName(),MyLogger.getMethodName());
+                logger.warning("NOT_FOUND_STUDENT",MyLogger.getClassName(),MyLogger.getMethodName());
                 response(responseObserver,"404","student");
                 e.printStackTrace();
         }
@@ -104,6 +99,11 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
     @Override
     public void getStudent(BasicRequest request, StreamObserver<StudentResponse> responseObserver) {
         StudentResponse response = EducationServiceGrpc.newBlockingStub(channel).getStudent(BasicRequest.newBuilder().setMessage(request.getMessage()).build());
+        if(response.getStatus().equals("OVERLAP")){
+
+        }else if (response.getStatus().equals("ALREADY")){
+
+        }
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
@@ -111,9 +111,20 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
     @Override
     public void enrolment(EnrolmentRequest request, StreamObserver<BasicResponse> responseObserver) {
         BasicResponse response = EducationServiceGrpc.newBlockingStub(channel).enrolment(EnrolmentRequest.newBuilder().setCourseId(request.getCourseId()).setStudentId(request.getStudentId()).build());
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
-
+            try {
+                if(response.getStatusMessage().equals("NON_COURSE"))throw new NoCourseDataException();
+                if(response.getStatusMessage().equals("ALREADY_ENROLMENT")) throw new AlreadyEnrolmentException();
+                if(response.getStatusMessage().equals("ALREADY_COURSE")) throw new AlreadyCourseException();
+                if(response.getStatusMessage().equals("NON_PREREQUISITE")) throw new NonPrerequisiteException();
+                if(response.getStatusMessage().equals("SUCCESS")) {
+                    logger.log("SUCCESS",MyLogger.getClassName(),MyLogger.getMethodName());
+                    response(responseObserver,"200","요청에 성공하였습니다.");
+                }
+            } catch (NoCourseDataException | AlreadyEnrolmentException | AlreadyCourseException | NonPrerequisiteException e) {
+                logger.warning("FAILED_ENROLMENT exception: "+e,MyLogger.getClassName(),MyLogger.getMethodName());
+                response(responseObserver,"405",response.getStatusMessage());
+                e.printStackTrace();
+            }
     }
 
     private void response(StreamObserver<BasicResponse> responseObserver, String code, String message) {
@@ -133,7 +144,7 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
             try {
                 if(response.getStatus().equals("FAILED")) throw new FailedLoginException();
             }catch (FailedLoginException e){
-                Logger.warning("FAILED_LOGIN",MyLogger.getClassName(),MyLogger.getMethodName());
+                logger.warning("FAILED_LOGIN",MyLogger.getClassName(),MyLogger.getMethodName());
                 e.printStackTrace();
             }
         responseObserver.onNext(response);

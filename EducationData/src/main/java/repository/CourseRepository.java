@@ -21,7 +21,7 @@ public class CourseRepository {
 
     public List<Course> getCourseAll() {
         ArrayList<Course> courses = new ArrayList<>();
-        String sql = "select * from Course";
+        String sql = "select * from COURSE";
 
         try {
             PreparedStatement st = this.connection.prepareStatement(sql);
@@ -74,7 +74,7 @@ public class CourseRepository {
     }
 
     public boolean checkOverlapCourse(String courseId) {
-        String sql = "select count(*) from course where course_id = ?";
+        String sql = "select count(*) from Course where course_id = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, courseId);

@@ -17,7 +17,7 @@ public class ManagerRepository {
 
 
     public boolean getManager(String id) {
-        String sql = "select count(*) from MANAGER where login_id=?";
+        String sql = "select count(*) from Manager where login_id=?";
         PreparedStatement st = null;
         try {
             st = connection.prepareStatement(sql);
