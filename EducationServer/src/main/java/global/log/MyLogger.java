@@ -57,8 +57,8 @@ public class MyLogger {
         logger.fine(msg);
     }
 
-    public void warning(String msg, String className, String methodName) {
-        logger.warning(" ClassName : "+className+"  MethodName : "+methodName+"  Message: "+msg);
+    public void warning(String msg, String className, String methodName, String exceptionClass) {
+        logger.warning(" ClassName : "+className+"  MethodName : "+methodName+"  Message: "+msg + "   ExceptionClass: "+exceptionClass);
     }
 
     public static String getClassName(){

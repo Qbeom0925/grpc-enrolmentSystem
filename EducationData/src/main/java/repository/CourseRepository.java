@@ -85,4 +85,14 @@ public class CourseRepository {
         }
         return false;
     }
+
+    public boolean getCourse(String completedCoursesList) {
+        String[] arr = completedCoursesList.split(",");
+        boolean answer = false;
+        for(int i=0; i<arr.length; i++){
+            if(checkOverlapCourse(arr[i])) answer = true;
+            else answer = false;
+        }
+        return answer;
+    }
 }

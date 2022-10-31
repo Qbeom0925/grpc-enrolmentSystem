@@ -22,7 +22,7 @@ public class StudentRepository {
     public List<Student> getStudentAll() {
         ArrayList<Student> students = new ArrayList<>();
         try {
-            String sql = "select * from STUDENT";
+            String sql = "select * from Student";
             PreparedStatement st = this.connection.prepareStatement(sql);
             ResultSet rs = null;
             rs = st.executeQuery();
@@ -47,7 +47,7 @@ public class StudentRepository {
 
     public boolean checkOverlapStudent(String studentId) {
         try {
-            String sql = "SELECT count(*) FROM STUDENT where student_id = ? ";
+            String sql = "SELECT count(*) FROM Student where student_id = ? ";
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1,studentId);
             ResultSet rs = st.executeQuery();
@@ -61,7 +61,7 @@ public class StudentRepository {
 
     public boolean checkNonOverlapStudent(String studentId) {
         try {
-            String sql = "SELECT count(*) FROM STUDENT where student_id = ? ";
+            String sql = "SELECT count(*) FROM Student where student_id = ? ";
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1,studentId);
             ResultSet rs = st.executeQuery();
@@ -89,7 +89,7 @@ public class StudentRepository {
 
     public void addStudent(String studentId, String firstName, String lastName, String major) {
         try {
-            String sql = "insert into STUDENT(student_id, first_name,  last_name, major,completed_courses,password) VALUES (?,?,?,?,?,?)";
+            String sql = "insert into Student(student_id, first_name,  last_name, major,completed_courses,password) VALUES (?,?,?,?,?,?)";
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, studentId);
             st.setString(2, firstName);
@@ -105,7 +105,7 @@ public class StudentRepository {
 
     public Student getStudent(String studentId) {
         try {
-            String sql = "select * from STUDENT where student_id = ?";
+            String sql = "select * from Student where student_id = ?";
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1,studentId);
             ResultSet rs =null;
@@ -129,7 +129,7 @@ public class StudentRepository {
 
     public void updateStudent(String studentId, String major, String lastName, String firstName, String completedCoursesList) {
         try {
-            String sql = "UPDATE STUDENT SET major= ? , last_name = ? , first_name = ? , completed_courses = ? WHERE student_id=?";
+            String sql = "UPDATE Student SET major= ? , last_name = ? , first_name = ? , completed_courses = ? WHERE student_id=?";
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1,major);
             st.setString(2,lastName);

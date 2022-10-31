@@ -6,5 +6,13 @@ public interface EducationCode {
 
     public static final String S404 = "404";
     public static final String S500 = "500";
+    public static final String S405 = "405";
+
+
+
+    public static final String NoDataMajorException = "NoDataMajorException";
+    public static final String ValidateStudentNumException = "ValidateStudentNumException";
+    public static final String OverlapStudentIdException = "OverlapStudentIdException";
+    public static final String NoCourseDataException = "NoCourseDataException";
 
 }

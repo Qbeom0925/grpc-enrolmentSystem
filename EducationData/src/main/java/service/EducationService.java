@@ -80,18 +80,10 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
     public void addStudent(AddStudentRequest request, StreamObserver<BasicResponse> responseObserver) {
         BasicResponse.Builder builder = BasicResponse.newBuilder();
         if(studentRepository.checkNonOverlapStudent(request.getStudentId())){
-            if(true){
-                if(true){
-                    studentRepository.addStudent(request.getStudentId(), request.getFirstName(),request.getLastName(),request.getMajor());
-                    builder.setMessage("SUCCESS");
-                }else{//학번 양식 안맞음
-                    builder.setMessage("NO_STUDENT_NUM");
-                }
-            }else{//학과 잘못 선택시
-                builder.setMessage("NO_MAJOR_DATA");
-            }
+            studentRepository.addStudent(request.getStudentId(), request.getFirstName(),request.getLastName(),request.getMajor());
+            builder.setStatusMessage("SUCCESS");
         }else{
-            builder.setMessage("OVERLAP_STUDENT_ID");
+            builder.setStatusMessage("OVERLAP_STUDENT_ID");
         }
         responseObserver.onNext(builder.build());
         responseObserver.onCompleted();
@@ -114,10 +106,14 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
     @Override
     public void updateStudent(AddStudentRequest request, StreamObserver<BasicResponse> responseObserver) {
         BasicResponse.Builder builder = BasicResponse.newBuilder();
-        studentRepository.updateStudent(request.getStudentId(), request.getMajor(), request.getLastName(), request.getFirstName(), request.getCompletedCoursesList());
-        builder.setMessage("SUCCESS");
-        responseObserver.onNext(builder.build());
+        if(courseRepository.getCourse(request.getCompletedCoursesList())){
+            studentRepository.updateStudent(request.getStudentId(), request.getMajor(), request.getLastName(), request.getFirstName(), request.getCompletedCoursesList().replace(","," "));
+            responseObserver.onNext(builder.setStatusMessage("SUCCESS").build());
+        }else{
+            responseObserver.onNext(builder.setStatusMessage("NO_COURSE").build());
+        }
         responseObserver.onCompleted();
+
     }
 
     @Override
@@ -126,8 +122,10 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
         Student student =null;
         if (studentRepository.checkOverlapStudent(request.getMessage())){
             student = studentRepository.getStudent(request.getMessage());
+            responseObserver.onNext(builder.setStudentId(student.getStudentId()).setFirstName(student.getFirstName()).setLastName(student.getLastName()).setMajor(student.getMajor()).setCompletedCoursesList(student.getCompletedCourses()).build());
+        }else{
+            responseObserver.onNext(builder.setStatus("NON_STUDENT_NUM").build());
         }
-        responseObserver.onNext(builder.setStudentId(student.getStudentId()).setFirstName(student.getFirstName()).setLastName(student.getLastName()).setMajor(student.getMajor()).setCompletedCoursesList(student.getCompletedCourses()).build());
         responseObserver.onCompleted();
     }
 
@@ -141,7 +139,6 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
                         studentRepository.enrolment(request.getStudentId(), request.getCourseId());
                         responseObserver.onNext(builder.setStatusMessage("SUCCESS").build());
                     } else responseObserver.onNext(builder.setStatusMessage("NON_PREREQUISITE").build());} else responseObserver.onNext(builder.setStatusMessage("ALREADY_COURSE").build());} else responseObserver.onNext(builder.setStatusMessage("ALREADY_ENROLMENT").build());} else responseObserver.onNext(builder.setStatusMessage("NON_COURSE").build());
-
         responseObserver.onCompleted();
     }
 
@@ -153,12 +150,9 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
             student = studentRepository.login(request.getStudentId(), request.getPassword());
             if (student != null){
                 responseObserver.onNext(builder.setStudentId(student.getStudentId()).setMajor(student.getMajor()).setLastName(student.getLastName()).setFirstName(student.getFirstName()).setCompletedCoursesList(student.getCompletedCourses()).setStatus("S").build());
-            }else{
-                responseObserver.onNext(builder.setStatus("FAILED").build());
-            }
-        }else{
-            responseObserver.onNext(builder.setStatus("M").build());
-        }
+            }else responseObserver.onNext(builder.setStatus("FAILED").build());
+        }else responseObserver.onNext(builder.setStatus("M").build());
+
         responseObserver.onCompleted();
     }
 
