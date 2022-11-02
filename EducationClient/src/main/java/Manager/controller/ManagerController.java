@@ -31,7 +31,7 @@ public class ManagerController {
                 case 4: updateStudent(); break; //완료
                 //TODO 학점 추가 예정
                 case 5: getAllCourseData(); break; //완료
-                case 6: addCourse(); break;
+                case 6: addCourse(); break; //완료
                 case 7: //과목 정보 수정
                     updateCourse();
                     break;
@@ -71,7 +71,6 @@ public class ManagerController {
     private void deleteStudent() {
        this.getAllStudentData();
         System.out.println("삭제할 학번을 입력해주세요."); String choice = sc.next();
-
         print(stub.deleteStudent(DeleteStudentRequest.newBuilder().setStudentId(choice).build()));
     }
 
@@ -96,6 +95,10 @@ public class ManagerController {
                 else if(message.equals(OverlapStudentIdException)) System.out.println(OVERLAP_STUDENT_ID_COMMENT);
                 else if(message.equals(NoCourseDataException)) System.out.println(COURSE_NUM);
                 break;
+            case S406:
+                if (message.equals(OverlapCourseNumException)) System.out.println(OVERLAP_COURSE_NUM_COMMENT);
+                if (message.equals(NoDataPrerequisiteException)) System.out.println(NO_DATA_PREREQUISITE_COMMENT);
+                if (message.equals(OverCourseCreditException)) System.out.println(OVER_COURSE_CREDIT_COMMENT);
         }
     }
 
@@ -105,7 +108,6 @@ public class ManagerController {
         System.out.print("성 : "); String lastName = sc.next();
         System.out.print("이름 : "); String firstName = sc.next();
         System.out.print("전공 : "); String major=sc.next();
-
         print(stub.addStudent(AddStudentRequest.newBuilder().setStudentId(studentId).setFirstName(firstName).setLastName(lastName).setMajor(major).build()));
     }
 
@@ -150,9 +152,8 @@ public class ManagerController {
             BasicResponse basicResponse = stub.updateStudent(builder.build());
             print(basicResponse);
 
-        }else{
-            System.out.println(FONT_RED+"학번을 다시 확인해주시기 바랍니다."+RESET);
-        }
+        }else System.out.println(FONT_RED+"학번을 다시 확인해주시기 바랍니다."+RESET);
+
 
     }
 
@@ -169,12 +170,10 @@ public class ManagerController {
         System.out.print("교수님 성 : "); String professorLastName = sc.next();
         System.out.print("과목이름 : "); String courseName = sc.next();
         System.out.print("과목 학점 : "); String courseCredit=sc.next();
-        System.out.print("선이수 과목 : "); String prerequisite=sc.next();
-
+        System.out.print("선이수 과목 (,로 구분하여 입력) 없을시 ,: "); String prerequisite=sc.next();
 
         BasicResponse basicResponse = stub.addCourse(AddCourseRequest.newBuilder().setCourseId(courseNum).setProfessorName(professorLastName).setCourseName(courseName).setCourseCredit(courseCredit).setPrerequisiteList(prerequisite).build());
-        //TODO 동일한 과목 번호, 선이수 해당 과목 존재한지 확인
-        System.out.println(basicResponse.getMessage());
+        print(basicResponse);
     }
 
     private void deleteCourse() {

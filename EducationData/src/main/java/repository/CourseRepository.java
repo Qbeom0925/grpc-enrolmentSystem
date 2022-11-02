@@ -47,7 +47,7 @@ public class CourseRepository {
     }
 
     public void addCourse(String courseId, String courseCredit, String courseName, String professorName, String prerequisiteList) {
-        String sql = "insert into course(course_id, course_name, course_credit, professor_first_name, prerequisite) VALUES (?,?,?,?,?)";
+        String sql = "insert into Course(course_id, course_name, course_credit, professor_first_name, prerequisite) VALUES (?,?,?,?,?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1,courseId);

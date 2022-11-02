@@ -27,14 +27,25 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
 
     @Override
     public void addCourse(AddCourseRequest request, StreamObserver<BasicResponse> responseObserver) {
-        BasicResponse basicResponse = EducationServiceGrpc.newBlockingStub(channel).addCourse(AddCourseRequest.newBuilder()
-                .setCourseId(request.getCourseId())
-                .setProfessorName(request.getProfessorName())
-                .setCourseName(request.getCourseName())
-                .setCourseCredit(request.getCourseCredit())
-                .setPrerequisiteList(request.getPrerequisiteList()).build());
-        responseObserver.onNext(basicResponse);
-        responseObserver.onCompleted();
+        try {
+            if(Integer.parseInt(request.getCourseCredit())>3 || Integer.parseInt(request.getCourseCredit()) < 0){
+                throw new OverCourseCreditException();
+            }
+
+            BasicResponse basicResponse = EducationServiceGrpc.newBlockingStub(channel).addCourse(AddCourseRequest.newBuilder().setCourseId(request.getCourseId()).setProfessorName(request.getProfessorName()).setCourseName(request.getCourseName()).setCourseCredit(request.getCourseCredit()).setPrerequisiteList(request.getPrerequisiteList()).build());
+
+            if(!basicResponse.getStatusMessage().equals("OVERLAP_COURSE_NUM")){
+                if (!basicResponse.getStatusMessage().equals("NO_DATA_PREREQUISITE")){
+                    logger.log("SUCCESS",MyLogger.getClassName(),MyLogger.getMethodName());
+                    response(responseObserver,"200","요청에 성공하였습니다.");
+                }else throw new NoDataPrerequisiteException();
+            }else throw new OverlapCourseNumException();
+
+        }catch (NoDataPrerequisiteException | OverlapCourseNumException | OverCourseCreditException e){
+            logger.warning("FAILED_ADD_COURSE exception: ",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
+            response(responseObserver,"406",e.getClass().getSimpleName());
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -65,6 +76,7 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
                     if(response.getStatusMessage().equals("OVERLAP_STUDENT_ID")){
                         throw new OverlapStudentIdException();
                     }else{
+                        logger.log("SUCCESS",MyLogger.getClassName(),MyLogger.getMethodName());
                         response(responseObserver,"200","요청에 성공하였습니다.");
                     }
             }else throw new ValidateStudentNumException();
@@ -76,8 +88,6 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
             e.printStackTrace();
         }
     }
-
-
 
     private boolean checkMajor(String major) {
         for(String s :MajorData.majorList){
@@ -116,6 +126,7 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
                     if (response.getStatusMessage().equals("NO_COURSE")){
                         throw new NoCourseDataException();
                     }else{
+                        logger.log("SUCCESS",MyLogger.getClassName(),MyLogger.getMethodName());
                         response(responseObserver,"200","요청에 성공하였습니다.");
                     }
                 } else {

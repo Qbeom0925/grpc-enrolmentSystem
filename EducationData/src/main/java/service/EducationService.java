@@ -39,10 +39,21 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
 
     @Override
     public void addCourse(AddCourseRequest request, StreamObserver<BasicResponse> responseObserver) {
-        //TODO 이미 존재한 과목 번호
         BasicResponse.Builder builder = BasicResponse.newBuilder();
-        courseRepository.addCourse(request.getCourseId(),request.getCourseCredit(),request.getCourseName(), request.getProfessorName(),request.getPrerequisiteList());
-        responseObserver.onNext(builder.setMessage("SUCCESS").build());
+        if (!courseRepository.checkOverlapCourse(request.getCourseId())){
+            String[] prerequisiteArr = request.getPrerequisiteList().split(",");
+            for (int i=0; i<prerequisiteArr.length; i++){
+                if (!courseRepository.checkOverlapCourse(prerequisiteArr[i])){
+                    builder.setStatusMessage("NO_DATA_PREREQUISITE");
+                }
+            }
+            if(!builder.getStatusMessage().equals("NO_DATA_PREREQUISITE")){
+                courseRepository.addCourse(request.getCourseId(),request.getCourseCredit(),request.getCourseName(),request.getProfessorName(),request.getPrerequisiteList().replace(',',' '));
+            }
+        }else{
+            builder.setMessage("OVERLAP_COURSE_NUM");
+        }
+        responseObserver.onNext(builder.build());
         responseObserver.onCompleted();
     }
 
@@ -152,7 +163,6 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
                 responseObserver.onNext(builder.setStudentId(student.getStudentId()).setMajor(student.getMajor()).setLastName(student.getLastName()).setFirstName(student.getFirstName()).setCompletedCoursesList(student.getCompletedCourses()).setStatus("S").build());
             }else responseObserver.onNext(builder.setStatus("FAILED").build());
         }else responseObserver.onNext(builder.setStatus("M").build());
-
         responseObserver.onCompleted();
     }
 
