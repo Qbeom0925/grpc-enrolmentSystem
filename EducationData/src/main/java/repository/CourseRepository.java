@@ -21,7 +21,7 @@ public class CourseRepository {
 
     public List<Course> getCourseAll() {
         ArrayList<Course> courses = new ArrayList<>();
-        String sql = "select * from COURSE";
+        String sql = "select * from Course";
 
         try {
             PreparedStatement st = this.connection.prepareStatement(sql);
@@ -63,7 +63,7 @@ public class CourseRepository {
 
 
     public void deleteCourse(String courseId) {
-        String sql = "delete from course where course_id = ?";
+        String sql = "delete from Course where course_id = ?";
         try {
             PreparedStatement st = this.connection.prepareStatement(sql);
             st.setString(1,courseId);

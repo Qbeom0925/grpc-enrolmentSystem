@@ -31,9 +31,7 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
             if(Integer.parseInt(request.getCourseCredit())>3 || Integer.parseInt(request.getCourseCredit()) < 0){
                 throw new OverCourseCreditException();
             }
-
             BasicResponse basicResponse = EducationServiceGrpc.newBlockingStub(channel).addCourse(AddCourseRequest.newBuilder().setCourseId(request.getCourseId()).setProfessorName(request.getProfessorName()).setCourseName(request.getCourseName()).setCourseCredit(request.getCourseCredit()).setPrerequisiteList(request.getPrerequisiteList()).build());
-
             if(!basicResponse.getStatusMessage().equals("OVERLAP_COURSE_NUM")){
                 if (!basicResponse.getStatusMessage().equals("NO_DATA_PREREQUISITE")){
                     logger.log("SUCCESS",MyLogger.getClassName(),MyLogger.getMethodName());
@@ -56,7 +54,6 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
     @Override
     public void deleteCourse(DeleteCourseRequest request, StreamObserver<BasicResponse> responseObserver) {
         BasicResponse basicResponse = EducationServiceGrpc.newBlockingStub(channel).deleteCourse(DeleteCourseRequest.newBuilder().setCourseId(request.getCourseId()).build());
-
             try {
                 if (basicResponse.getStatusMessage().equals("NO_DATA_COURSE")) {
                     throw new NoCourseDataException();
@@ -64,8 +61,8 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
                     response(responseObserver,"200","요청에 성공하였습니다.");
                 }
             } catch (NoCourseDataException e) {
-                logger.warning("FAILED_ADD_COURSE",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
-                response(responseObserver,"406",e.getClass().getSimpleName());
+                logger.warning("FAILED_DELETE_COURSE",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
+                response(responseObserver,"405",e.getClass().getSimpleName());
                 e.printStackTrace();
             }
     }

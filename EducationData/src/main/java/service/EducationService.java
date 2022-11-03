@@ -23,9 +23,6 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
         this.managerRepository = new ManagerRepository();
     }
 
-
-    //TODO 학생, 과목 클래스 나눌 방법 생각
-
     @Override
     public void getAllCoursesData(BasicRequest request, StreamObserver<GetAllCoursesDataResponse> responseObserver) {
         GetAllCoursesDataResponse.Builder builder = GetAllCoursesDataResponse.newBuilder();

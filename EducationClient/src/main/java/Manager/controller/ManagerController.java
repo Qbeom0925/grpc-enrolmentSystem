@@ -22,7 +22,8 @@ public class ManagerController {
 
     public void initial() {
         Exit:
-        
+
+        //TODO 숫자인지 판단
         while (true) {
             switch (printMenu()) {
                 case 1: getAllStudentData(); break; //완료
@@ -142,7 +143,6 @@ public class ManagerController {
                     builder.setMajor(sc.next());
                     break;
                 case 4:
-                    //TODO 해당 과목 번호 존재한지 확인
                     System.out.println("수정 전: " + response.getCompletedCoursesList());
                     System.out.print("수정 후(,로 구분하여 입력): ");
                     builder.setCompletedCoursesList(sc.next());
@@ -181,9 +181,10 @@ public class ManagerController {
 
         BasicResponse basicResponse = stub.deleteCourse(DeleteCourseRequest.newBuilder().setCourseId(courseId).build());
         print(basicResponse);
-        System.out.println(basicResponse.getMessage());
+//        System.out.println(basicResponse.getMessage());
     }
 
+    //TODO 과목 존재여부, 선이수과목 존재여부
     private void updateCourse() {
         System.out.println("개발 진행 중입니다.");
     }
