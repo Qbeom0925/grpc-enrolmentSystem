@@ -67,9 +67,9 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
         BasicResponse.Builder builder = BasicResponse.newBuilder();
         if(courseRepository.checkOverlapCourse(request.getCourseId())){
             courseRepository.deleteCourse(request.getCourseId());
-            builder.setMessage("SUCCESS");
+            builder.setStatusMessage("SUCCESS");
         }else{
-            //TODO 존재하지 않는 과목
+            builder.setStatusMessage("NO_DATA_COURSE");
         }
         responseObserver.onNext(builder.build());
         responseObserver.onCompleted();

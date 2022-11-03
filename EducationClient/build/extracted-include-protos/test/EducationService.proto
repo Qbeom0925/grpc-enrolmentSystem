@@ -57,6 +57,7 @@ message StudentResponse {
   string firstName = 3;
   string major = 4;
   string completedCoursesList = 5;
+  string status = 6;
 }
 
 message CourseResponse {

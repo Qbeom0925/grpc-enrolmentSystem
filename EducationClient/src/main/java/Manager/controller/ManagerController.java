@@ -29,13 +29,12 @@ public class ManagerController {
                 case 2: addStudent(); break; //완료
                 case 3: deleteStudent(); break ; //완료
                 case 4: updateStudent(); break; //완료
-                //TODO 학점 추가 예정
                 case 5: getAllCourseData(); break; //완료
                 case 6: addCourse(); break; //완료
                 case 7: //과목 정보 수정
                     updateCourse();
                     break;
-                case 8: deleteCourse(); break;
+                case 8: deleteCourse(); break; //완료
                 case 0: break Exit;
             }
         }
@@ -178,10 +177,10 @@ public class ManagerController {
 
     private void deleteCourse() {
         getAllCourseData();
-        System.out.println("삭제할 과목 번호를 입력해주세요.");
-        String courseId = sc.next();
+        System.out.println("삭제할 과목 번호 : "); String courseId = sc.next();
 
         BasicResponse basicResponse = stub.deleteCourse(DeleteCourseRequest.newBuilder().setCourseId(courseId).build());
+        print(basicResponse);
         System.out.println(basicResponse.getMessage());
     }
 

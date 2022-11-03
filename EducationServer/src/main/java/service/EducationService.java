@@ -42,7 +42,7 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
             }else throw new OverlapCourseNumException();
 
         }catch (NoDataPrerequisiteException | OverlapCourseNumException | OverCourseCreditException e){
-            logger.warning("FAILED_ADD_COURSE exception: ",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
+            logger.warning("FAILED_ADD_COURSE",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
             response(responseObserver,"406",e.getClass().getSimpleName());
             e.printStackTrace();
         }
@@ -56,8 +56,18 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
     @Override
     public void deleteCourse(DeleteCourseRequest request, StreamObserver<BasicResponse> responseObserver) {
         BasicResponse basicResponse = EducationServiceGrpc.newBlockingStub(channel).deleteCourse(DeleteCourseRequest.newBuilder().setCourseId(request.getCourseId()).build());
-        responseObserver.onNext(basicResponse);
-        responseObserver.onCompleted();
+
+            try {
+                if (basicResponse.getStatusMessage().equals("NO_DATA_COURSE")) {
+                    throw new NoCourseDataException();
+                }else {
+                    response(responseObserver,"200","요청에 성공하였습니다.");
+                }
+            } catch (NoCourseDataException e) {
+                logger.warning("FAILED_ADD_COURSE",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
+                response(responseObserver,"406",e.getClass().getSimpleName());
+                e.printStackTrace();
+            }
     }
 
     @Override
@@ -133,7 +143,7 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
                     throw new NoDataMajorException();
                 }
             }catch(NoDataMajorException | NoCourseDataException e){
-                logger.warning("FAILED_ENROLMENT exception: ",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
+                logger.warning("FAILED_ENROLMENT",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
                 response(responseObserver,"405",e.getClass().getSimpleName());
                 e.printStackTrace();
             }
@@ -146,7 +156,7 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
          try {
              if (response.getStatus().equals("NON_STUDENT_NUM"))throw new NoStudentNumException();
         } catch (NoStudentNumException e) {
-            logger.warning("FAILED_GET_STUDENT exception: ",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
+            logger.warning("FAILED_GET_STUDENT",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
             e.printStackTrace();
         }
         responseObserver.onNext(response);
@@ -166,7 +176,7 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
                     response(responseObserver,"200","요청에 성공하였습니다.");
                 }
             } catch (NoCourseDataException | AlreadyEnrolmentException | AlreadyCourseException | NonPrerequisiteException e) {
-                logger.warning("FAILED_ENROLMENT exception: ",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
+                logger.warning("FAILED_ENROLMENT",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
                 response(responseObserver,"405",response.getStatusMessage());
                 e.printStackTrace();
             }
