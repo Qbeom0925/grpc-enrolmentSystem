@@ -13,37 +13,25 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
     private MyLogger logger;
     private ManagedChannel channel;
 
+    private CourseService courseService;
+    private StudentService studentService;
+
     public EducationService(ManagedChannel channel) {
         this.channel = channel;
         logger = MyLogger.getLogger();
+        courseService = new CourseService(channel);
+        studentService = new StudentService(channel);
     }
 
     @Override
     public void getAllCoursesData(BasicRequest request, StreamObserver<GetAllCoursesDataResponse> responseObserver) {
-        GetAllCoursesDataResponse response = EducationServiceGrpc.newBlockingStub(channel).getAllCoursesData(BasicRequest.newBuilder().build());
-        responseObserver.onNext(response);
+        responseObserver.onNext(courseService.getAllCoursesDataResponse());
         responseObserver.onCompleted();
     }
 
     @Override
     public void addCourse(AddCourseRequest request, StreamObserver<BasicResponse> responseObserver) {
-        try {
-            if(Integer.parseInt(request.getCourseCredit())>3 || Integer.parseInt(request.getCourseCredit()) < 0){
-                throw new OverCourseCreditException();
-            }
-            BasicResponse basicResponse = EducationServiceGrpc.newBlockingStub(channel).addCourse(AddCourseRequest.newBuilder().setCourseId(request.getCourseId()).setProfessorName(request.getProfessorName()).setCourseName(request.getCourseName()).setCourseCredit(request.getCourseCredit()).setPrerequisiteList(request.getPrerequisiteList()).build());
-            if(!basicResponse.getStatusMessage().equals("OVERLAP_COURSE_NUM")){
-                if (!basicResponse.getStatusMessage().equals("NO_DATA_PREREQUISITE")){
-                    logger.log("SUCCESS",MyLogger.getClassName(),MyLogger.getMethodName());
-                    response(responseObserver,"200","요청에 성공하였습니다.");
-                }else throw new NoDataPrerequisiteException();
-            }else throw new OverlapCourseNumException();
-
-        }catch (NoDataPrerequisiteException | OverlapCourseNumException | OverCourseCreditException e){
-            logger.warning("FAILED_ADD_COURSE",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
-            response(responseObserver,"406",e.getClass().getSimpleName());
-            e.printStackTrace();
-        }
+        this.courseService.addCourse(request,responseObserver);
     }
 
     @Override
@@ -53,138 +41,47 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
 
     @Override
     public void deleteCourse(DeleteCourseRequest request, StreamObserver<BasicResponse> responseObserver) {
-        BasicResponse basicResponse = EducationServiceGrpc.newBlockingStub(channel).deleteCourse(DeleteCourseRequest.newBuilder().setCourseId(request.getCourseId()).build());
-            try {
-                if (basicResponse.getStatusMessage().equals("NO_DATA_COURSE")) {
-                    throw new NoCourseDataException();
-                }else {
-                    response(responseObserver,"200","요청에 성공하였습니다.");
-                }
-            } catch (NoCourseDataException e) {
-                logger.warning("FAILED_DELETE_COURSE",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
-                response(responseObserver,"405",e.getClass().getSimpleName());
-                e.printStackTrace();
-            }
+        this.courseService.deleteCourse(request,responseObserver);
     }
 
     @Override
     public void getAllStudentsData(BasicRequest request, StreamObserver<GetAllStudentsDataResponse> responseObserver) {
-        GetAllStudentsDataResponse response = EducationServiceGrpc.newBlockingStub(channel).getAllStudentsData(BasicRequest.newBuilder().build());
-        responseObserver.onNext(response);
+        responseObserver.onNext(this.studentService.getAllStudentsData());
         responseObserver.onCompleted();
     }
 
     @Override
     public void addStudent(AddStudentRequest request, StreamObserver<BasicResponse> responseObserver) {
-        BasicResponse response=null;
-        try {
-            if(checkMajor(request.getMajor())){if(request.getStudentId().length()==8){
-                    response = EducationServiceGrpc.newBlockingStub(channel).addStudent(AddStudentRequest.newBuilder().setStudentId(request.getStudentId()).setFirstName(request.getFirstName()).setLastName(request.getLastName()).setMajor(request.getMajor()).build());
-                    if(response.getStatusMessage().equals("OVERLAP_STUDENT_ID")){
-                        throw new OverlapStudentIdException();
-                    }else{
-                        logger.log("SUCCESS",MyLogger.getClassName(),MyLogger.getMethodName());
-                        response(responseObserver,"200","요청에 성공하였습니다.");
-                    }
-            }else throw new ValidateStudentNumException();
-            }else throw new NoDataMajorException();
-
-        }catch (NoDataMajorException | ValidateStudentNumException | OverlapStudentIdException e) {
-            logger.warning("FAILED_ENROLMENT exception: ",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
-            response(responseObserver,"405",e.getClass().getSimpleName());
-            e.printStackTrace();
-        }
+        this.studentService.addStudent(request,responseObserver);
     }
 
-    private boolean checkMajor(String major) {
-        for(String s :MajorData.majorList){
-            if(s.equals(major)) return true;
-        }
-        return false;
-    }
 
     @Override
     public void deleteStudent(DeleteStudentRequest request, StreamObserver<BasicResponse> responseObserver) {
-        BasicResponse response = EducationServiceGrpc.newBlockingStub(channel).deleteStudent(DeleteStudentRequest.newBuilder().setStudentId(request.getStudentId()).build());
-        try {
-            if (response.getMessage().equals("SUCCESS")){
-                logger.log("SUCCESS",MyLogger.getClassName(),MyLogger.getMethodName());
-                response(responseObserver,"200","요청에 성공하였습니다.");
-            }else{
-                throw new NoStudentNumException();
-            }
-        } catch (NoStudentNumException e) {
-                logger.warning("NOT_FOUND_STUDENT",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
-                response(responseObserver,"404","student");
-                e.printStackTrace();
-        }
+        this.studentService.deleteStudent(request,responseObserver);
     }
 
     @Override
     public void updateStudent(AddStudentRequest request, StreamObserver<BasicResponse> responseObserver) {
-            try {
-                if (checkMajor(request.getMajor())) {
-                    BasicResponse response = EducationServiceGrpc.newBlockingStub(channel).updateStudent(AddStudentRequest.newBuilder()
-                            .setStudentId(request.getStudentId())
-                            .setFirstName(request.getFirstName())
-                            .setLastName(request.getLastName())
-                            .setMajor(request.getMajor())
-                            .setCompletedCoursesList(request.getCompletedCoursesList()).build());
-                    if (response.getStatusMessage().equals("NO_COURSE")){
-                        throw new NoCourseDataException();
-                    }else{
-                        logger.log("SUCCESS",MyLogger.getClassName(),MyLogger.getMethodName());
-                        response(responseObserver,"200","요청에 성공하였습니다.");
-                    }
-                } else {
-                    throw new NoDataMajorException();
-                }
-            }catch(NoDataMajorException | NoCourseDataException e){
-                logger.warning("FAILED_ENROLMENT",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
-                response(responseObserver,"405",e.getClass().getSimpleName());
-                e.printStackTrace();
-            }
-
+        this.studentService.updateStudent(request,responseObserver);
     }
 
     @Override
     public void getStudent(BasicRequest request, StreamObserver<StudentResponse> responseObserver) {
-        StudentResponse response = EducationServiceGrpc.newBlockingStub(channel).getStudent(BasicRequest.newBuilder().setMessage(request.getMessage()).build());
-         try {
-             if (response.getStatus().equals("NON_STUDENT_NUM"))throw new NoStudentNumException();
-        } catch (NoStudentNumException e) {
-            logger.warning("FAILED_GET_STUDENT",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
-            e.printStackTrace();
-        }
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+        this.studentService.getStudent(request,responseObserver);
     }
 
     @Override
     public void enrolment(EnrolmentRequest request, StreamObserver<BasicResponse> responseObserver) {
-        BasicResponse response = EducationServiceGrpc.newBlockingStub(channel).enrolment(EnrolmentRequest.newBuilder().setCourseId(request.getCourseId()).setStudentId(request.getStudentId()).build());
-            try {
-                if(response.getStatusMessage().equals("NON_COURSE"))throw new NoCourseDataException();
-                if(response.getStatusMessage().equals("ALREADY_ENROLMENT")) throw new AlreadyEnrolmentException();
-                if(response.getStatusMessage().equals("ALREADY_COURSE")) throw new AlreadyCourseException();
-                if(response.getStatusMessage().equals("NON_PREREQUISITE")) throw new NonPrerequisiteException();
-                if(response.getStatusMessage().equals("SUCCESS")) {
-                    logger.log("SUCCESS",MyLogger.getClassName(),MyLogger.getMethodName());
-                    response(responseObserver,"200","요청에 성공하였습니다.");
-                }
-            } catch (NoCourseDataException | AlreadyEnrolmentException | AlreadyCourseException | NonPrerequisiteException e) {
-                logger.warning("FAILED_ENROLMENT",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
-                response(responseObserver,"405",response.getStatusMessage());
-                e.printStackTrace();
-            }
+        this.studentService.enrolment(request,responseObserver);
     }
 
-    private void response(StreamObserver<BasicResponse> responseObserver, String code, String message) {
+    public static void response(StreamObserver<BasicResponse> responseObserver, String code, String message) {
         responseObserver.onNext(makeStatusCode(BasicResponse.newBuilder(), code, message));
         responseObserver.onCompleted();
     }
 
-    public BasicResponse makeStatusCode(BasicResponse.Builder statusCodeBuilder, String code, String message){
+    public static BasicResponse makeStatusCode(BasicResponse.Builder statusCodeBuilder, String code, String message){
         return statusCodeBuilder.setStatusCode(code).setMessage(message).setStatusMessage(message).build();
     }
 
@@ -192,8 +89,8 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
     @Override
     public void login(StudentLoginRequest request, StreamObserver<StudentResponse> responseObserver) {
         StudentResponse response=null;
-            response = EducationServiceGrpc.newBlockingStub(channel).login(StudentLoginRequest.newBuilder().setStudentId(request.getStudentId()).setPassword(request.getPassword()).build());
             try {
+                response = EducationServiceGrpc.newBlockingStub(channel).login(StudentLoginRequest.newBuilder().setStudentId(request.getStudentId()).setPassword(request.getPassword()).build());
                 if(response.getStatus().equals("FAILED")) throw new FailedLoginException();
             }catch (FailedLoginException e){
                 logger.warning("FAILED_LOGIN",MyLogger.getClassName(),MyLogger.getMethodName(),e.getClass().getSimpleName());
@@ -203,5 +100,21 @@ public class EducationService extends EducationServiceGrpc.EducationServiceImplB
         responseObserver.onCompleted();
     }
 
+
+    public static boolean checkMajor(String major) {
+        for(String s : MajorData.majorList){
+            if(s.equals(major)) return true;
+        }
+        return false;
+    }
+
+    public static boolean isNumeric(String s) {
+        try {
+            Double.parseDouble(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
 }

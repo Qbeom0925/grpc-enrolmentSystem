@@ -11,7 +11,7 @@ public class SqlConnection{
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection connection = null;
             connection = DriverManager.getConnection(
-                    "jdbc:mysql://mehdb.cengwcl4wnom.ap-northeast-2.rds.amazonaws.com:3306/education?",
+                    "jdbc:mysql://mehdb.cengwcl4wnom.ap-northeast-2.rds.amazonaws.co:3306/educ?",
                     "admin",
                     "mehmeh123");
             return connection;

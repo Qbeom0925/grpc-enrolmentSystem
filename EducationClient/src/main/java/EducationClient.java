@@ -1,22 +1,20 @@
-import Manager.controller.ManagerController;
-import Student.controller.StudentController;
 import com.grpc.education.EducationServiceGrpc;
 import com.grpc.education.StudentLoginRequest;
 import com.grpc.education.StudentResponse;
-import global.Comment;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import manager.controller.ManagerController;
+import student.controller.StudentController;
 
 import java.util.Scanner;
 
-public class ClientMain {
+public class EducationClient {
 
     private static ManagedChannel ch;
     private static EducationServiceGrpc.EducationServiceBlockingStub stub;
 
     private static ManagerController managerController;
     private static StudentController studentController;
-    private static Comment comment;
     private static Scanner sc;
 
     private static StudentResponse studentResponse;
@@ -59,7 +57,6 @@ public class ClientMain {
         stub = EducationServiceGrpc.newBlockingStub(ch);
         managerController = new ManagerController(stub);
         studentController = new StudentController(stub);
-        comment = new Comment();
         sc=new Scanner(System.in);
     }
 

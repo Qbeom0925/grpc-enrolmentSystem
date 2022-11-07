@@ -1,6 +1,6 @@
-package Manager.comment;
+package manager.comment;
 
-import static Manager.exception.ManagerExceptionList.*;
+import static manager.exception.ManagerExceptionList.*;
 
 
 public interface ClientComment {
@@ -10,7 +10,7 @@ public interface ClientComment {
     String FONT_BLUE = "\u001B[34m";
 
     String SUCCESS = FONT_BLUE+"요청에 성공하였습니다."+RESET;
-    String COURSE_NUM = FONT_RED+ NO_COURSE_DATA.getMessage()+RESET;
+    String NO_COURSE_NUM_COMMENT = FONT_RED+ NO_COURSE_DATA.getMessage()+RESET;
     String STUDENT_NUM = FONT_RED+ NO_STUDENT.getMessage()+RESET;
     String DISCONNECTION = FONT_RED+"DB연결에 에러가 발생하였습니다."+RESET;
     String NO_DATA_MAJOR_COMMENT = FONT_RED+ NO_DATA_MAJOR.getMessage()+RESET;
@@ -19,7 +19,12 @@ public interface ClientComment {
     String OVERLAP_COURSE_NUM_COMMENT = FONT_RED+OVERLAP_COURSE_NUM.getMessage()+RESET;
     String NO_DATA_PREREQUISITE_COMMENT = FONT_RED+NO_DATA_PREREQUISITE.getMessage()+RESET;
     String OVER_COURSE_CREDIT_COMMENT = FONT_RED+OVER_COURSE_CREDIT.getMessage()+RESET;
+    String VALIDATE_NUMBER_COMMENT = FONT_RED+VALIDATE_NUMBER.getMessage()+RESET;
+    String ALREADY_ENROLMENT_COMMENT = FONT_RED+ALREADY_ENROLMENT.getMessage()+RESET;
+    String ALREADY_COURSE_COMMENT = FONT_RED+ALREADY_COURSE.getMessage()+RESET;
+    String NON_PREREQUISITE_COMMENT = FONT_RED+NON_PREREQUISITE.getMessage()+RESET;
 
-    public static final String STUDENT = "student";
-    public static final String COURSE = "course";
+
+
+    String STUDENT = "student";
 }

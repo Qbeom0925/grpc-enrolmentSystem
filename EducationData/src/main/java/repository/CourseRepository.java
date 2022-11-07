@@ -50,11 +50,7 @@ public class CourseRepository {
         String sql = "insert into Course(course_id, course_name, course_credit, professor_first_name, prerequisite) VALUES (?,?,?,?,?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1,courseId);
-            st.setString(2,courseName);
-            st.setString(3,courseCredit);
-            st.setString(4,professorName);
-            st.setString(5,prerequisiteList);
+            st.setString(1,courseId);st.setString(2,courseName);st.setString(3,courseCredit);st.setString(4,professorName);st.setString(5,prerequisiteList);
             st.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

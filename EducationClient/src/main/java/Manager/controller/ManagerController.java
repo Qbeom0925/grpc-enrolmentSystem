@@ -1,13 +1,12 @@
-package Manager.controller;
+package manager.controller;
 
-import Manager.exception.exceution.CheckMenuNumException;
 import com.grpc.education.*;
 
 import java.util.List;
 import java.util.Scanner;
 
-import static Manager.comment.ClientComment.*;
-import static Manager.comment.EducationCode.*;
+import static manager.comment.ClientComment.*;
+import static manager.comment.EducationCode.*;
 
 public class ManagerController {
 
@@ -22,8 +21,6 @@ public class ManagerController {
 
     public void initial() {
         Exit:
-
-        //TODO 숫자인지 판단
         while (true) {
             switch (printMenu()) {
                 case 1: getAllStudentData(); break; //완료
@@ -32,18 +29,15 @@ public class ManagerController {
                 case 4: updateStudent(); break; //완료
                 case 5: getAllCourseData(); break; //완료
                 case 6: addCourse(); break; //완료
-                case 7: //과목 정보 수정
-                    updateCourse();
-                    break;
-                case 8: deleteCourse(); break; //완료
+                case 7: deleteCourse(); break; //완료
                 case 0: break Exit;
             }
         }
     }
 
     public int printMenu(){
-        sc = new Scanner(System.in);
-        List<String> stringList = List.of("1. 전체 학생 정보 조회","2. 학생 정보 추가", "3. 학생 정보 삭제", "4. 학생 정보 수정", "---------------","5. 전체 과목 정보 조회","6. 과목 정보 추가", "7. 과목 정보 수정", "8. 과목 정보 삭제");
+        List<String> stringList = List.of("1. 전체 학생 정보 조회","2. 학생 정보 추가", "3. 학생 정보 삭제", "4. 학생 정보 수정",
+                "---------------","5. 전체 과목 정보 조회","6. 과목 정보 추가", "7. 과목 정보 삭제","0. 로그아웃");
 
         for (String s : stringList) System.out.println(s);
 
@@ -51,7 +45,7 @@ public class ManagerController {
         while (true){
             choice = sc.nextInt();
             if(choice > stringList.size() || choice < 0){
-                new CheckMenuNumException();
+                System.out.println("번호를 다시 입력해주세요.");
                 continue;
             }
             break;
@@ -84,7 +78,8 @@ public class ManagerController {
                 break;
             case S404:
                 if(message.equals(STUDENT))System.out.println(STUDENT_NUM);
-                else System.out.println(COURSE_NUM);
+                else System.out.println(NO_COURSE_NUM_COMMENT);
+                if (message.equals(ValidateNumberException)) System.out.println(VALIDATE_NUMBER_COMMENT);
                 break;
             case S500:
                 System.out.println(DISCONNECTION);
@@ -93,12 +88,14 @@ public class ManagerController {
                 if(message.equals(NoDataMajorException)) System.out.println(NO_DATA_MAJOR_COMMENT);
                 else if(message.equals(ValidateStudentNumException)) System.out.println(VALIDATE_STUDENT_NUM_COMMENT);
                 else if(message.equals(OverlapStudentIdException)) System.out.println(OVERLAP_STUDENT_ID_COMMENT);
-                else if(message.equals(NoCourseDataException)) System.out.println(COURSE_NUM);
+                else if(message.equals(NoCourseDataException)) System.out.println(NO_COURSE_NUM_COMMENT);
+                if (message.equals(ValidateNumberException)) System.out.println(VALIDATE_NUMBER_COMMENT);
                 break;
             case S406:
                 if (message.equals(OverlapCourseNumException)) System.out.println(OVERLAP_COURSE_NUM_COMMENT);
                 if (message.equals(NoDataPrerequisiteException)) System.out.println(NO_DATA_PREREQUISITE_COMMENT);
                 if (message.equals(OverCourseCreditException)) System.out.println(OVER_COURSE_CREDIT_COMMENT);
+                if (message.equals(ValidateNumberException)) System.out.println(VALIDATE_NUMBER_COMMENT);
         }
     }
 
@@ -148,16 +145,12 @@ public class ManagerController {
                     builder.setCompletedCoursesList(sc.next());
                     break;
             }
-            BasicResponse basicResponse = stub.updateStudent(builder.build());
-            print(basicResponse);
-
+            print(stub.updateStudent(builder.build()));
         }else System.out.println(FONT_RED+"학번을 다시 확인해주시기 바랍니다."+RESET);
-
-
     }
 
     private void getAllCourseData() {
-        System.out.println("[과목번호] 강사 성 || 과목명 || 선이수 과목");
+        System.out.println("[과목번호] 교수님 성 || 과목명 || 선이수 과목");
         for (GetAllCoursesDataResponse.Course c : stub.getAllCoursesData(BasicRequest.newBuilder().build()).getCoursesList()) {
             System.out.println("["+c.getCourseId()+"]"+ " "+ c.getProfessorName()+" "+c.getCourseName()+" "+c.getPrerequisiteList()+" "+c.getCourseCredit());
         }
@@ -170,22 +163,13 @@ public class ManagerController {
         System.out.print("과목이름 : "); String courseName = sc.next();
         System.out.print("과목 학점 : "); String courseCredit=sc.next();
         System.out.print("선이수 과목 (,로 구분하여 입력) 없을시 ,: "); String prerequisite=sc.next();
-
-        BasicResponse basicResponse = stub.addCourse(AddCourseRequest.newBuilder().setCourseId(courseNum).setProfessorName(professorLastName).setCourseName(courseName).setCourseCredit(courseCredit).setPrerequisiteList(prerequisite).build());
-        print(basicResponse);
+        print(stub.addCourse(AddCourseRequest.newBuilder().setCourseId(courseNum).setProfessorName(professorLastName).setCourseName(courseName).setCourseCredit(courseCredit).setPrerequisiteList(prerequisite).build()));
     }
 
     private void deleteCourse() {
         getAllCourseData();
         System.out.println("삭제할 과목 번호 : "); String courseId = sc.next();
-
-        BasicResponse basicResponse = stub.deleteCourse(DeleteCourseRequest.newBuilder().setCourseId(courseId).build());
-        print(basicResponse);
-//        System.out.println(basicResponse.getMessage());
+        print(stub.deleteCourse(DeleteCourseRequest.newBuilder().setCourseId(courseId).build()));
     }
 
-    //TODO 과목 존재여부, 선이수과목 존재여부
-    private void updateCourse() {
-        System.out.println("개발 진행 중입니다.");
-    }
 }

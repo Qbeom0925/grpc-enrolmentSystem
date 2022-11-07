@@ -1,20 +1,21 @@
-package Manager.comment;
+package manager.comment;
 
 public interface EducationCode {
 
-    public static final String S200 = "200";
+    String S200 = "200";
 
-    public static final String S404 = "404";
-    public static final String S500 = "500";
-    public static final String S405 = "405";
-    public static final String S406 = "406";
+    String S404 = "404";
+    String S500 = "500";
+    String S405 = "405";
+    String S406 = "406";
 
 
-    public static final String NoDataMajorException = "NoDataMajorException";
-    public static final String ValidateStudentNumException = "ValidateStudentNumException";
-    public static final String OverlapStudentIdException = "OverlapStudentIdException";
-    public static final String NoCourseDataException = "NoCourseDataException";
-    public static final String OverlapCourseNumException="OverlapCourseNumException";
+    String NoDataMajorException = "NoDataMajorException";
+    String ValidateStudentNumException = "ValidateStudentNumException";
+    String OverlapStudentIdException = "OverlapStudentIdException";
+    String NoCourseDataException = "NoCourseDataException";
+    String OverlapCourseNumException="OverlapCourseNumException";
     String NoDataPrerequisiteException = "NoDataPrerequisiteException";
     String OverCourseCreditException = "OverCourseCreditException";
+    String ValidateNumberException = "ValidateNumberException";
 }

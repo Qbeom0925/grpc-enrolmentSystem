@@ -1,9 +1,14 @@
-package Student.controller;
+package student.controller;
 
-import com.grpc.education.*;
+import com.grpc.education.BasicResponse;
+import com.grpc.education.EducationServiceGrpc;
+import com.grpc.education.EnrolmentRequest;
+import com.grpc.education.StudentResponse;
 
 import java.util.List;
 import java.util.Scanner;
+
+import static manager.comment.ClientComment.*;
 
 public class StudentController {
 
@@ -40,10 +45,10 @@ public class StudentController {
         System.out.println("과목 번호:");  String courseNum = sc.next();
         BasicResponse enrolment = stub.enrolment(EnrolmentRequest.newBuilder().setStudentId(studentResponse.getStudentId()).setCourseId(courseNum).build());
         switch (enrolment.getStatusMessage()){
-            case "NON_COURSE": System.out.println("해당 번호를 가진 과목은 없습니다.");break;
-            case "ALREADY_ENROLMENT":System.out.println("해당 과목을 이미 수강신청을 하였습니다.");break;
-            case "ALREADY_COURSE":System.out.println("해당 과목을 이미 수강하였습니다.");break;
-            case "NON_PREREQUISITE":System.out.println("해당 과목의 선 이수 과목을 수강하지 않았습니다.");break;
+            case "NON_COURSE": System.out.println(NO_COURSE_NUM_COMMENT);break;
+            case "ALREADY_ENROLMENT":System.out.println(ALREADY_ENROLMENT_COMMENT);break;
+            case "ALREADY_COURSE":System.out.println(ALREADY_COURSE_COMMENT);break;
+            case "NON_PREREQUISITE":System.out.println(NON_PREREQUISITE_COMMENT);break;
             case "SUCCESS":System.out.println("수강신청이 완료되었습니다.");break;
         }
     }

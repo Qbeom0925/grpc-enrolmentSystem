@@ -4,13 +4,11 @@ import service.EducationService;
 
 import java.io.IOException;
 
-public class DBMain {
+public class EducationData {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Server server = ServerBuilder
                 .forPort(9001)
-//                .addService(new CourseService())
-//                .addService(new StudentService())
                 .addService(new EducationService())
                 .build();
 

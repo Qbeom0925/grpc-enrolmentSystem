@@ -9,3 +9,4 @@ public class AlreadyEnrolmentException extends EducationException {
         super(ALREADY_ENROLMENT.getErrorCode(), ALREADY_ENROLMENT.getMessage());
     }
 }
+

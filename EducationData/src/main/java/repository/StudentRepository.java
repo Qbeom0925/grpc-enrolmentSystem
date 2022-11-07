@@ -77,7 +77,7 @@ public class StudentRepository {
 
     public void deleteStudent(String studentId) {
         try {
-            String sql = "DELETE FROM STUDENT WHERE student_id = ?;";
+            String sql = "DELETE FROM Student WHERE student_id = ?;";
             PreparedStatement st = this.connection.prepareStatement(sql);
             st.setString(1, studentId);
             st.executeUpdate();

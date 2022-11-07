@@ -3,7 +3,7 @@ import service.EducationService;
 
 import java.io.IOException;
 
-public class GrpcServer {
+public class EducationServer {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         run();
